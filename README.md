@@ -8,7 +8,6 @@
 
 ## 目录
  - [项目主要程序介绍](#项目主要程序介绍)
- - [模型测试表](#模型测试表)
  - [安装环境](#安装环境)
  - [准备数据](#准备数据)
  - [微调模型](#微调模型)
@@ -36,67 +35,7 @@
 
 
 
-<a name='模型测试表'></a>
 
-## 模型测试表
-
-1. 原始模型字错率测试表。
-
-|       使用模型       |  指定语言   | aishell_test | test_net | test_meeting |  粤语测试集  |   模型获取   | 
-|:----------------:|:-------:|:------------:|:--------:|:------------:|:-------:|:--------:|
-|   whisper-tiny   | Chinese |   0.31898    | 0.40482  |   0.75332    |   N/A   | 加入知识星球获取 |
-|   whisper-base   | Chinese |   0.22196    | 0.30404  |   0.50378    |   N/A   | 加入知识星球获取 |
-|  whisper-small   | Chinese |   0.13897    | 0.18417  |   0.31154    |   N/A   | 加入知识星球获取 |
-|  whisper-medium  | Chinese |   0.09538    | 0.13591  |   0.26669    |   N/A   | 加入知识星球获取 |
-|  whisper-large   | Chinese |   0.08969    | 0.12933  |   0.23439    |   N/A   | 加入知识星球获取 |
-| whisper-large-v2 | Chinese |   0.08817    | 0.12332  |   0.26547    |   N/A   | 加入知识星球获取 |
-| whisper-large-v3 | Chinese |   0.08086    | 0.11452  |   0.19878    | 0.18782 | 加入知识星球获取 |
-
-
-2. 微调数据集后字错率测试表。
-
-|       使用模型       |   指定语言    |                            数据集                             | aishell_test | test_net | test_meeting |  粤语测试集  |   模型获取   |  
-|:----------------:|:---------:|:----------------------------------------------------------:|:------------:|:--------:|:------------:|:-------:|:--------:|
-|   whisper-tiny   |  Chinese  | [AIShell](https://openslr.magicdatatech.com/resources/33/) |   0.13043    |  0.4463  |   0.57728    |   N/A   | 加入知识星球获取 |
-|   whisper-base   |  Chinese  | [AIShell](https://openslr.magicdatatech.com/resources/33/) |   0.08999    | 0.33089  |   0.40713    |   N/A   | 加入知识星球获取 |
-|  whisper-small   |  Chinese  | [AIShell](https://openslr.magicdatatech.com/resources/33/) |   0.05452    | 0.19831  |   0.24229    |   N/A   | 加入知识星球获取 |
-|  whisper-medium  |  Chinese  | [AIShell](https://openslr.magicdatatech.com/resources/33/) |   0.03681    | 0.13073  |   0.16939    |   N/A   | 加入知识星球获取 |
-| whisper-large-v2 |  Chinese  | [AIShell](https://openslr.magicdatatech.com/resources/33/) |   0.03139    | 0.12201  |   0.15776    |   N/A   | 加入知识星球获取 |
-| whisper-large-v3 |  Chinese  | [AIShell](https://openslr.magicdatatech.com/resources/33/) |   0.03660    | 0.09835  |   0.13706    | 0.20060 | 加入知识星球获取 |
-| whisper-large-v3 | Cantonese |                           粤语数据集                            |   0.06857    | 0.11369  |   0.17452    | 0.03524 | 加入知识星球获取 |
-|   whisper-tiny   |  Chinese  |     [WenetSpeech](./tools/create_wenetspeech_data.py)      |   0.17711    | 0.24783  |   0.39226    |   N/A   | 加入知识星球获取 |
-|   whisper-base   |  Chinese  |     [WenetSpeech](./tools/create_wenetspeech_data.py)      |   0.14548    | 0.17747  |   0.30590    |   N/A   | 加入知识星球获取 |
-|  whisper-small   |  Chinese  |     [WenetSpeech](./tools/create_wenetspeech_data.py)      |   0.08484    | 0.11801  |   0.23471    |   N/A   | 加入知识星球获取 |
-|  whisper-medium  |  Chinese  |     [WenetSpeech](./tools/create_wenetspeech_data.py)      |   0.05861    | 0.08794  |   0.19486    |   N/A   | 加入知识星球获取 |
-| whisper-large-v2 |  Chinese  |     [WenetSpeech](./tools/create_wenetspeech_data.py)      |   0.05443    | 0.08367  |   0.19087    |   N/A   | 加入知识星球获取 |
-| whisper-large-v3 |  Chinese  |     [WenetSpeech](./tools/create_wenetspeech_data.py)      |   0.04947    | 0.10711  |   0.17429    | 0.47431 | 加入知识星球获取 |
-
-3. 推理速度测试表，使用GPU为GTX3090（24G），音频为`test_long.wav`，时长为3分钟整，测试程序在`tools/run_compute.sh`。
-
-|                                   加速方式                                    |  tiny  |  base  | small  | medium  | large-v2 | large-v3 |
-|:-------------------------------------------------------------------------:|:------:|:------:|:------:|:-------:|:--------:|:--------:|
-|                  Transformers (`fp16` + `batch_size=16`)                  | 1.458s | 1.671s | 2.331s | 11.071s |  4.779s  | 12.826s  |    
-|            Transformers (`fp16` + `batch_size=16` + `Compile`)            | 1.477s | 1.675s | 2.357s | 11.003s |  4.799s  | 12.643s  |    
-|       Transformers (`fp16` + `batch_size=16` + `BetterTransformer`)       | 1.461s | 1.676s | 2.301s | 11.062s |  4.608s  | 12.505s  |    
-|       Transformers (`fp16` + `batch_size=16` + `Flash Attention 2`)       | 1.436s | 1.630s | 2.258s | 10.533s |  4.344s  | 11.651s  |    
-| Transformers (`fp16` + `batch_size=16` + `Compile` + `BetterTransformer`) | 1.442s | 1.686s | 2.277s | 11.000s |  4.543s  | 12.592s  |    
-| Transformers (`fp16` + `batch_size=16` + `Compile` + `Flash Attention 2`) | 1.409s | 1.643s | 2.220s | 10.390s |  4.377s  | 11.703s  |    
-|                 Faster Whisper (`fp16` + `beam_size=1` )                  | 2.179s | 1.492s | 2.327s | 3.752s  |  5.677s  | 31.541s  |    
-|                 Faster Whisper (`8-bit` + `beam_size=1` )                 | 2.609s | 1.728s | 2.744s | 4.688s  |  6.571s  | 29.307s  |    
-
-4. 经过处理的数据列表。
-
-|  数据列表处理方式  | AiShell  | WenetSpeech | 
-|:----------:|:--------:|:-----------:|
-|   添加标点符号   | 加入知识星球获取 |  加入知识星球获取   |
-| 添加标点符号和时间戳 | 加入知识星球获取 |  加入知识星球获取   |
-
-**重要说明：**
-1. 在评估的时候移除模型输出的标点符号，并把繁体中文转成简体中文。
-2. `aishell_test`为AIShell的测试集，`test_net`和`test_meeting`为WenetSpeech的测试集。
-3. 测试速度的音频为`dataset/test_long.wav`，时长为3分钟整。
-4. 训练数据使用的是带标点符号的数据，字错率高一点。
-5. 微调AiShell数据不带时间戳，微调WenetSpeech带时间戳。
 
 <a name='安装环境'></a>
 
