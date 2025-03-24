@@ -244,4 +244,4 @@ python sentiment_analysis.py
 2. https://github.com/guillaumekln/faster-whisper
 3. https://github.com/ggerganov/whisper.cpp
 4. https://github.com/Const-me/Whisper
-5. 训练、合并、评估、预测代码来自--https://github.com/yeyupiaoling/Whisper-Finetune 
+5. 部分代码来自--https://github.com/yeyupiaoling/Whisper-Finetune 
